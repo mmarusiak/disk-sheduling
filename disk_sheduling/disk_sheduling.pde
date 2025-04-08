@@ -56,11 +56,10 @@ void draw() {
       drawProcess(p, s);
     }     
     drawAlgorithm(alg, s);
-
-    drawText(alg.getName(), 10, s.getRow(), s.getCol());
+    popMatrix();
+    drawText(alg.getName(), 12, s);
 
     alg.iteration();
-    popMatrix();
   }
   time += 1;
 }
@@ -87,12 +86,11 @@ void drawAlgorithm(Algorithm alg, Scene scene){
 }
 
 
-void drawText(String label, int size, int row, int col){
+void drawText(String label, int size, Scene scene){
  pushMatrix();
- translate(width * row / grid, height * col / grid);
- fill(255, 255, 255);
+ translate(scene.getXOffset() + scene.getWidth()/2 - simEdges * (scene.getRow() + 1)/2, scene.getYOffset() + scene.getHeight() + simEdges - simEdges/4);
+ fill(0);
  textSize(size);
- rect(0, 0, 20, 20);
  text(label, 0, 0);
  popMatrix();
 }
