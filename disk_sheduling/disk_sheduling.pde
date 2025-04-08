@@ -1,3 +1,5 @@
+import grafica.*;
+
 int simEdges = 20;
 
 int time = 0;
@@ -11,9 +13,11 @@ int startPos = 0;
 int headWidth = 60, headHeight = 60;
 int processWidth = 20, processHeight = 90;
 
+boolean didEnd = false;
+
 
 Generator gen = new Generator(diskSize);
-ArrayList<Process> processes = gen.simpleRandomGenerator(200);
+ArrayList<Process> processes = gen.simpleRandomGenerator(20);
 
 ArrayList<Scene> scenes = new ArrayList<Scene>();
 
@@ -36,8 +40,8 @@ void setup() {
   
   int yOffset = simEdges;
   for (int y = 0; y < grid; y++){
-    int xOffset = simEdges;
-    for (int x = 0; x < grid; x++, scenes.add(new Scene(xOffset, yOffset, sceneWidth, sceneHeight, x, y)), xOffset += sceneWidth + simEdges);
+    int xOffset = simEdges + headWidth/2;
+    for (int x = 0; x < grid; x++, scenes.add(new Scene(xOffset, yOffset, sceneWidth, sceneHeight, x, y)), xOffset += sceneWidth + simEdges + headWidth/2);
     yOffset += sceneHeight + simEdges;
   }
 }
@@ -45,6 +49,34 @@ void setup() {
 void draw() {
   background(0);
   drawGrid();
+  if (didEnd){
+    // Prepare the points for the plot
+  int nPoints = 100;
+  GPointsArray points = new GPointsArray(nPoints);
+
+  for (int i = 0; i < nPoints; i++) {
+    points.add(i, 10*noise(0.1*i));
+  }
+
+  // Create a new plot and set its position on the screen
+  GPlot plot = new GPlot(this);
+  plot.setPos(25, 25);
+  // or all in one go
+  // GPlot plot = new GPlot(this, 25, 25);
+
+  // Set the plot title and the axis labels
+  plot.setTitleText("A very simple example");
+  plot.getXAxis().setAxisLabelText("x axis");
+  plot.getYAxis().setAxisLabelText("y axis");
+
+  // Add the points
+  plot.setPoints(points);
+
+  // Draw it!
+  plot.defaultDraw(); 
+  }
+  else{
+    int counter = 0;
   for (int i = 0; i < algs.length; i ++){
     Algorithm alg = algs[i];
     Scene s = scenes.get(i);
@@ -58,10 +90,13 @@ void draw() {
     drawAlgorithm(alg, s);
     popMatrix();
     drawText(alg.getName(), 12, s);
-
+    if (!alg.processesLeft()) counter ++;
     alg.iteration();
   }
   time += 1;
+     if (counter == algs.length) didEnd = true;
+  }
+  
 }
 
 
@@ -88,8 +123,9 @@ void drawAlgorithm(Algorithm alg, Scene scene){
 
 void drawText(String label, int size, Scene scene){
  pushMatrix();
- translate(scene.getXOffset() + scene.getWidth()/2 - simEdges * (scene.getRow() + 1)/2, scene.getYOffset() + scene.getHeight() + simEdges - simEdges/4);
+ translate(scene.getXOffset() + scene.getWidth()/2 - simEdges * (2 * scene.getRow() + 1)/2, scene.getYOffset() + scene.getHeight() + simEdges - simEdges/4);
  fill(0);
+ textAlign(CENTER);
  textSize(size);
  text(label, 0, 0);
  popMatrix();
