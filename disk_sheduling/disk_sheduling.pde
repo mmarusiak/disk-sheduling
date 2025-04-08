@@ -1,5 +1,3 @@
-import grafica.*;
-
 int simEdges = 20;
 
 int time = 0;
@@ -17,7 +15,7 @@ boolean didEnd = false;
 
 
 Generator gen = new Generator(diskSize);
-ArrayList<Process> processes = gen.simpleRandomGenerator(20);
+ArrayList<Process> processes = gen.simpleRandomGenerator(300);
 
 ArrayList<Scene> scenes = new ArrayList<Scene>();
 
@@ -25,7 +23,7 @@ Algorithm[] algs = new Algorithm[] {
   new FCFS(startPos, "FCFS", cloneProcesses(processes)), 
   new SSTF(startPos, "SSTF", cloneProcesses(processes)), 
   new Scan(startPos, "Scan", cloneProcesses(processes), diskSize), 
-  new CScan(startPos, "C-Scan", cloneProcesses(processes), diskSize) 
+  new CScan(startPos, "C-Scan", cloneProcesses(processes), diskSize)
 };
   
 
@@ -50,53 +48,49 @@ void draw() {
   background(0);
   drawGrid();
   if (didEnd){
-    // Prepare the points for the plot
-  int nPoints = 100;
-  GPointsArray points = new GPointsArray(nPoints);
-
-  for (int i = 0; i < nPoints; i++) {
-    points.add(i, 10*noise(0.1*i));
-  }
-
-  // Create a new plot and set its position on the screen
-  GPlot plot = new GPlot(this);
-  plot.setPos(25, 25);
-  // or all in one go
-  // GPlot plot = new GPlot(this, 25, 25);
-
-  // Set the plot title and the axis labels
-  plot.setTitleText("A very simple example");
-  plot.getXAxis().setAxisLabelText("x axis");
-  plot.getYAxis().setAxisLabelText("y axis");
-
-  // Add the points
-  plot.setPoints(points);
-
-  // Draw it!
-  plot.defaultDraw(); 
-  }
-  else{
-    int counter = 0;
-  for (int i = 0; i < algs.length; i ++){
-    Algorithm alg = algs[i];
-    Scene s = scenes.get(i);
-   
-    pushMatrix(); 
-    translate(s.getXOffset(), s.getYOffset());
+    pushMatrix();
+    rectMode(CORNER);
+    background(185);
+    translate(0, height/2);
+    float[] avgTimes = new float[algs.length];
+    float max = 0;
+    for(int i = 0; i < algs.length; i++){
+      Algorithm alg = algs[i];
+      avgTimes[i] = alg.getAvgWaitingTime(processes.size());
+      if (avgTimes[i] > max) max = avgTimes[i];
+    }
     
-    for (Process p : alg.getProcesses()){
-      drawProcess(p, s);
-    }     
-    drawAlgorithm(alg, s);
+    for(int i = 0; i < algs.length; i ++){
+      float t = avgTimes[i];
+      translate((width - 400)/algs.length, 0);
+      fill (100, 100, 0);
+      rect(0, 0, 20, t * height/(max * 2));
+    }
+    
     popMatrix();
-    drawText(alg.getName(), 12, s);
-    if (!alg.processesLeft()) counter ++;
-    alg.iteration();
   }
-  time += 1;
-     if (counter == algs.length) didEnd = true;
-  }
-  
+  else {
+    
+    int counter = 0;
+    for (int i = 0; i < algs.length; i ++){
+      Algorithm alg = algs[i];
+      Scene s = scenes.get(i);
+     
+      pushMatrix(); 
+      translate(s.getXOffset(), s.getYOffset());
+      
+      for (Process p : alg.getProcesses()){
+        drawProcess(p, s);
+      }     
+      drawAlgorithm(alg, s);
+      popMatrix();
+      drawText(alg.getName(), 12, s);
+      if (!alg.processesLeft()) counter ++;
+      alg.iteration();
+    }
+   time += 1;
+   if (counter == algs.length) didEnd = true;
+   }
 }
 
 

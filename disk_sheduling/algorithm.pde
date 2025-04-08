@@ -68,4 +68,8 @@ abstract class Algorithm{
   public ArrayList<Process> getProcesses() {
     return processes; 
   }
+  
+  public float getAvgWaitingTime(int count){
+    return this.avgWaitingTime / count;
+  }
 }
