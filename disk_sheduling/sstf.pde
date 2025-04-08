@@ -10,8 +10,8 @@ class SSTF extends Algorithm {
  @Override
  public void move(){
    if (!processesLeft() || (this.currentProcess == null && !this.getCurrentProcess())) return;
-   if (this.processes.get(0).getArrivalTime() > this.time) return;
-   int targetPos = this.processes.get(0).getPos();
+   if (currentProcess.getArrivalTime() > this.time) return;
+   int targetPos = currentProcess.getPos();
    if(this.pos > targetPos) this.pos--;
    else this.pos++;
    

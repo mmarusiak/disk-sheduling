@@ -1,4 +1,4 @@
-class Process{
+class Process {
  
   private boolean isRealTime = false;
   private int pos;
@@ -34,5 +34,9 @@ class Process{
   
   public int getTimeToProcess(){
     return this.timeToProcess;
+  }
+  
+  public Process clone(){
+    return new Process(this.isRealTime, this.pos, this.arrivalTime);
   }
 }

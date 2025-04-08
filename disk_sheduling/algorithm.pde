@@ -3,6 +3,7 @@ abstract class Algorithm{
   protected String name;
   protected ArrayList<Process> processes;
   protected int time;
+  protected int avgWaitingTime = 0;
   
   public Algorithm(int startPos, String name, ArrayList<Process> processes){
     this.pos = startPos;
@@ -16,11 +17,12 @@ abstract class Algorithm{
     // ends all tasks in desired position.
     int i = 0;
     while (i < processes.size()){
-      if(processes.get(i).getPos() != this.pos || processes.get(i).getArrivalTime() > this.time){
+      if(this.processes.get(i).getPos() != this.pos || this.processes.get(i).getArrivalTime() > this.time){
         i ++;
         continue;
       }
-      processes.remove(i);
+      this.avgWaitingTime += this.processes.get(i).getWaitingTime();
+      this.processes.remove(i);
     }
   }
   
@@ -53,6 +55,10 @@ abstract class Algorithm{
   
   public String getName(){
     return name; 
+  }
+  
+  public void setName(String newName){
+    this.name = newName;
   }
   
   public int getTime(){
