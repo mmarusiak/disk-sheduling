@@ -13,10 +13,12 @@ float scalar = 70;
 
 int time = 0;
 int diskSize = 50;
-int windowWidth = 640, windowHeight = 360;
+int starvationTime = 100;
+
+
 Generator gen = new Generator(diskSize);
-ArrayList<Process> processes = gen.simpleRandomGenerator(20);
-FCFS fcfs = new FCFS(0, "FCFS", processes);
+ArrayList<Process> processes = gen.simpleRandomGenerator(200);
+CScan alg = new CScan(0, "SSTF", processes, diskSize);
   
 
 void setup() {
@@ -27,10 +29,10 @@ void setup() {
 
 void draw() {
   background(0);
-  if (fcfs.processesLeft()){
-    for (Process process : fcfs.getProcesses()) drawProcess(process);
-    drawAlgorithm(fcfs);
-    fcfs.iteration();
+  if (alg.processesLeft()){
+    for (Process process : alg.getProcesses()) drawProcess(process);
+    drawAlgorithm(alg);
+    alg.iteration();
     time += 1;
   }
   
@@ -64,12 +66,20 @@ void draw() {
 
 void drawProcess(Process process){
   if (process.getArrivalTime() > time) return;
-  fill(255);
+  if (process.isRealTime()){
+    int fill_color = 255/process.getTimeToProcess() * constrain(process.getWaitingTime(), 0, process.getTimeToProcess());
+    fill(fill_color, 0, 0); 
+  }
+  else {
+    fill(255 * constrain(process.getWaitingTime(), 0, starvationTime) / starvationTime); 
+  }
+  stroke(255);
   rect(process.getPos() * width / diskSize, height - 60, 20, 60);
+  noStroke();
 }
 
 void drawAlgorithm(Algorithm alg){
-  fill(204, 204, 0);
+  fill(0, 102, 153);
   //print(alg.getPos());
   rect(alg.getPos() * width / diskSize, height-100, 100, 100);
 }

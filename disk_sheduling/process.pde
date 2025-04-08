@@ -1,9 +1,10 @@
-class Process implements Comparable<Process>{
+class Process{
  
   private boolean isRealTime = false;
   private int pos;
   private int arrivalTime;
   private int waitingTime = 0;
+  private int timeToProcess = 0;
   
   public Process(boolean isRT, int pos, int arrivalTime){
     this.isRealTime = isRT;
@@ -27,9 +28,11 @@ class Process implements Comparable<Process>{
     return this.arrivalTime;
   }
   
-  @Override
-  public int compareTo(Process p)
-  {
-     return(this.arrivalTime - p.getArrivalTime());
+  public int getWaitingTime(){
+    return this.waitingTime; 
+  }
+  
+  public int getTimeToProcess(){
+    return this.timeToProcess;
   }
 }

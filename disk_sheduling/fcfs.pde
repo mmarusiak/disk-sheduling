@@ -1,12 +1,7 @@
-import java.util.Collections;
-
 class FCFS extends Algorithm {
   public FCFS(int startX, String name, ArrayList<Process> processes){
     super(startX, name, processes);
-    Collections.sort(this.processes);
-    print(this.processes.get(0).getArrivalTime());
-    
-    print(this.processes.get(2).getArrivalTime());
+    processes.sort((p1, p2) -> p1.getArrivalTime() - p2.getArrivalTime());
   }
   
  @Override
