@@ -1,8 +1,15 @@
+int simEdges = 20;
+
 int time = 0;
-int diskSize = 50;
-int starvationTime = 100;
+int diskSize = 30;
+int starvationTime = 10;
+
+int grid;
 
 int startPos = 0;
+
+int headWidth = 60, headHeight = 60;
+int processWidth = 20, processHeight = 90;
 
 
 Generator gen = new Generator(diskSize);
@@ -21,25 +28,23 @@ Algorithm[] algs = new Algorithm[] {
 void setup() {
   size(920, 420);
   noStroke();
-  rectMode(CORNER);
+  rectMode(CENTER);
   
-  int rowscols = (int)sqrt(algs.length);
-  print(rowscols);
-  int sceneWidth = width/rowscols;
-  int sceneHeight = height/rowscols;
+  grid = (int)sqrt(algs.length);
+  int sceneWidth = (width - ((grid + 1) * simEdges))/grid;
+  int sceneHeight = (height - ((grid + 1) * simEdges))/grid;
   
-  int yOffset = 0;
-  for (int y = 0; y < rowscols; y++){
-    int xOffset = 0;
-    for (int x = 0; x < rowscols; x++, scenes.add(new Scene(xOffset, yOffset, sceneWidth, sceneHeight)), xOffset += sceneWidth);
-    yOffset += sceneHeight;
+  int yOffset = simEdges;
+  for (int y = 0; y < grid; y++){
+    int xOffset = simEdges;
+    for (int x = 0; x < grid; x++, scenes.add(new Scene(xOffset, yOffset, sceneWidth, sceneHeight, x, y)), xOffset += sceneWidth + simEdges);
+    yOffset += sceneHeight + simEdges;
   }
-  print(scenes.size());
-  print(scenes.get(2).getXOffset());
 }
 
 void draw() {
   background(0);
+  drawGrid();
   for (int i = 0; i < algs.length; i ++){
     Algorithm alg = algs[i];
     Scene s = scenes.get(i);
@@ -47,29 +52,30 @@ void draw() {
     pushMatrix(); 
     translate(s.getXOffset(), s.getYOffset());
     
-    drawText(alg.getName(), 200, 200);
-    drawAlgorithm(alg, s);
     for (Process p : alg.getProcesses()){
       drawProcess(p, s);
-    }
+    }     
+    drawAlgorithm(alg, s);
+
+    drawText(alg.getName(), 10, s.getRow(), s.getCol());
+
     alg.iteration();
     popMatrix();
   }
+  time += 1;
 }
 
 
 void drawProcess(Process process, Scene scene){
   if (process.getArrivalTime() > time) return;
   if (process.isRealTime()){
-    int fill_color = 255/process.getTimeToProcess() * constrain(process.getWaitingTime(), 0, process.getTimeToProcess());
+    int fill_color = 55 + 200 * constrain(process.getWaitingTime(), 0, process.getTimeToProcess()) / process.getTimeToProcess();
     fill(fill_color, 0, 0); 
   }
   else {
-    fill(255 * constrain(process.getWaitingTime(), 0, starvationTime) / starvationTime); 
+    fill(55 + 200 * constrain(process.getWaitingTime(), 0, starvationTime) / starvationTime); 
   }
-  stroke(255);
-  rect(process.getPos() * scene.getWidth() / diskSize, scene.getHeight() - 60, 20, 60);
-  noStroke();
+  rect(process.getPos() * scene.getWidth() / diskSize, scene.getHeight() - processHeight/2, processWidth, processHeight);
 }
 
 
@@ -77,14 +83,36 @@ void drawAlgorithm(Algorithm alg, Scene scene){
   fill(0, 102, 153);
   //print(alg.getPos());
   int newPos = alg.getPos() * scene.getWidth() / diskSize;
-  rect(newPos, scene.getHeight() - 100, 100, 100);
+  rect(newPos, scene.getHeight() - headHeight/2, headWidth, headHeight);
 }
 
 
-void drawText(String label, int w, int h){
- fill(255);
- textSize(10);
- text(label, w, h);
+void drawText(String label, int size, int row, int col){
+ pushMatrix();
+ translate(width * row / grid, height * col / grid);
+ fill(255, 255, 255);
+ textSize(size);
+ rect(0, 0, 20, 20);
+ text(label, 0, 0);
+ popMatrix();
+}
+
+
+void drawGrid(){
+ for (int x = 0; x <= grid; x ++){
+   int offset = x == 2 ? -simEdges/2 : x == 0 ? simEdges/2 : 0;
+   pushMatrix();
+   translate(width * x / grid, 0);
+   fill(255);
+   rect(offset, height/2, simEdges, height);
+   popMatrix();
+   
+   pushMatrix();
+   translate(0, height * x / grid);
+   fill(255);
+   rect(width/2, offset, width, simEdges);
+   popMatrix();
+ }
 }
 
 
