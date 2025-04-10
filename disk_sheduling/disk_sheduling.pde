@@ -19,9 +19,7 @@ void setup() {
 
 void draw() {
   background(255);
-  for(Scene scene : myScenes){
-    scene.drawScene();
-  }
+  view.drawView();
 }
 
 CScan d_CScan(){

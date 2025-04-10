@@ -17,6 +17,12 @@ class View {
     this.screens = 0;
   }
   
+  public void drawView(){
+    if(processesLeft()){
+       for (Scene s : scenes) s.drawScene(); 
+    }
+  }
+  
   
   public void rescaleScenes(){
     
@@ -44,6 +50,13 @@ class View {
     }
     int cols = dividers.get(dividers.size()/2), rows = screens/cols;
     return new int[] {rows, cols};
+  }
+  
+  private boolean processesLeft() {
+     for (Scene s : scenes){
+       if (s.processesLeft()) return true;
+     }
+     return false;
   }
   
   public ArrayList<Scene> getScenes() { return scenes; }

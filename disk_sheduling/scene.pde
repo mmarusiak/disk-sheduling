@@ -110,4 +110,6 @@ class Scene{
  public void setRow(int n) { this.row = n; }
  
  public void setCol(int n) { this.col = n; }
+ 
+ public boolean processesLeft() { return this.simulation.processesLeft(); }
 }
