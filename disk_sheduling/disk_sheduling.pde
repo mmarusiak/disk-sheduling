@@ -30,7 +30,7 @@ CScan d_CScan(ArrayList<Process> p){
 }
 
 Scan d_Scan(ArrayList<Process> p){
-   return new Scan(START_POS, "can", p, DISK_SIZE); 
+   return new Scan(START_POS, "Scan", p, DISK_SIZE); 
 }
 
 FCFS d_FCFS(ArrayList<Process> p){
