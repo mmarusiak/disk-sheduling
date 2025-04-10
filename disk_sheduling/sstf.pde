@@ -1,8 +1,8 @@
 class SSTF extends Algorithm {
   private Process currentProcess = null;
   
-  public SSTF(int startX, String name, ArrayList<Process> processes){
-    super(startX, name, processes);
+  public SSTF(int startX, String name, Generator generator, int processesCount){
+    super(startX, name, generator, processesCount);
     sortProcesses();
     getCurrentProcess();
   }

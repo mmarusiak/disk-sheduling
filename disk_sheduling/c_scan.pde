@@ -3,8 +3,8 @@ class CScan extends Algorithm {
   private int diskSize;
   private int restarts = 0;
   
-  public CScan(int startX, String name, ArrayList<Process> processes, int diskSize){
-    super(startX, name, processes);
+  public CScan(int startX, String name, Generator generator, int processesCount, int diskSize){
+    super(startX, name, generator, processesCount);
     
     this.diskSize = diskSize;
     if (this.pos > this.diskSize) this.step = -1;

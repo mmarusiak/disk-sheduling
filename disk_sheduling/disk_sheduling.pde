@@ -1,8 +1,8 @@
 int DISK_SIZE = 50;
 int START_POS = 0;
+int PROCESSES_COUNT = 200;
 
-Generator gen = new Generator(DISK_SIZE);
-ArrayList<Process> processes = gen.simpleRandomGenerator(300);
+Generator gen = new RandomGenerator(9);
   
 View view;
   
@@ -12,7 +12,7 @@ void setup() {
   size(1260, 500);
   noStroke();
   rectMode(CENTER);
-  view = new View(20, new Scene(d_FCFS(p())), new Scene(d_SSTF(p())), new Scene(d_Scan(p())), new Scene(d_CScan(p())));
+  view = new View(20, new Scene(d_FCFS()), new Scene(d_SSTF()), new Scene(d_Scan()), new Scene(d_CScan()));
   myScenes = view.getScenes();
   
 }
@@ -24,26 +24,20 @@ void draw() {
   }
 }
 
-CScan d_CScan(ArrayList<Process> p){
-   return new CScan(START_POS, "C-Scan", p, DISK_SIZE); 
+CScan d_CScan(){
+   return new CScan(START_POS, "C-Scan", gen, PROCESSES_COUNT, DISK_SIZE); 
 }
 
-Scan d_Scan(ArrayList<Process> p){
-   return new Scan(START_POS, "Scan", p, DISK_SIZE); 
+Scan d_Scan(){
+   return new Scan(START_POS, "Scan", gen, PROCESSES_COUNT, DISK_SIZE); 
 }
 
-FCFS d_FCFS(ArrayList<Process> p){
-   return new FCFS(START_POS, "FCFS", p); 
+FCFS d_FCFS(){
+   return new FCFS(START_POS, "FCFS", gen, PROCESSES_COUNT); 
 }
 
-
-SSTF d_SSTF(ArrayList<Process> p){
-   return new SSTF(START_POS, "SSTF", p); 
-}
-
-
-ArrayList<Process> p(){
-   return cloneProcesses(processes);
+SSTF d_SSTF(){
+   return new SSTF(START_POS, "SSTF", gen, PROCESSES_COUNT); 
 }
 
 ArrayList<Process> cloneProcesses(ArrayList<Process> src){
