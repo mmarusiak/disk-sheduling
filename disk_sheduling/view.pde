@@ -31,7 +31,8 @@ class View {
       scene.setSceneWidth(sceneWidth);
       scene.setSceneHeight(sceneHeight);
       scene.setXOffset(margin * (i % cols + 1) + sceneWidth * (i % cols));
-      scene.setYOffset(margin * ((int)(i / cols / rows) + 1) + sceneHeight * ((int)(i / cols / rows)));
+      scene.setYOffset(margin * ((int)(i / cols) % rows + 1) + sceneHeight * ((int)(i / cols) % rows));
+      scene.setMargin(margin);
     }
   }
   
@@ -41,7 +42,8 @@ class View {
     for (int i = 1; i <= screens; i ++){
       if (screens%i == 0) dividers.add(i);
     }
-    return new int[] {dividers.get(dividers.size()/2 - 1), dividers.get(dividers.size()/2)};
+    int cols = dividers.get(dividers.size()/2), rows = screens/cols;
+    return new int[] {rows, cols};
   }
   
   public ArrayList<Scene> getScenes() { return scenes; }

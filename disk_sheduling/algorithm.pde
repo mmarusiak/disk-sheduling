@@ -5,6 +5,8 @@ abstract class Algorithm{
   protected int time;
   protected int avgWaitingTime = 0;
   
+  public final int WIDTH = 60, HEIGHT = 60;
+  
   public Algorithm(int startPos, String name, ArrayList<Process> processes){
     this.pos = startPos;
     this.name = name;
