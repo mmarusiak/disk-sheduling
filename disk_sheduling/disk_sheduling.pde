@@ -9,10 +9,9 @@ View view;
 ArrayList<Scene> myScenes;
 
 void setup() {
-  size(920, 420);
+  size(1260, 500);
   noStroke();
   rectMode(CENTER);
-  // works only for < 2 rows
   view = new View(20, new Scene(d_FCFS(p())), new Scene(d_SSTF(p())), new Scene(d_Scan(p())), new Scene(d_CScan(p())));
   myScenes = view.getScenes();
   

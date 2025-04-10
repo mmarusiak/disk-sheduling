@@ -21,15 +21,23 @@ class Scene{
  }
  
  public void drawScene(){
+    simulation.iteration();
+    
     fill(0);
     pushMatrix();
+    // draw bg
     translate(this.getXOffset(), this.getYOffset());
     rect(this.getWidth()/2, this.getHeight()/2, this.getWidth(), this.getHeight());
      
-    translate (simulation.WIDTH/2, 0);
-    int simWidth = sceneWidth - simulation.WIDTH;
+    // draw processes
+    int processWidth = sceneWidth / DISK_SIZE;
+    // i think we should move it to disk sheduling class! if no processes on screen all objects are bigger!
+    int headWidth = simulation.processes.size() > 0 ? simulation.WIDTH * processWidth / simulation.processes.get(0).WIDTH : simulation.WIDTH;
+    int headHeight = simulation.processes.size() > 0 ? simulation.HEIGHT * processWidth / simulation.processes.get(0).WIDTH : simulation.HEIGHT;
+    int simWidth = sceneWidth - headWidth;
     
-    simulation.iteration();
+    translate (headWidth/2, 0);
+    
     for (Process p : simulation.processes){
       if(p.getArrivalTime() > simulation.getTime()) continue;
       if(p.isRealTime()){
@@ -41,16 +49,18 @@ class Scene{
         fill(50 + 205 * c_multiplier);
       }
       
-      rect(simWidth * p.getPos() / DISK_SIZE, sceneHeight - p.HEIGHT/2, p.WIDTH, p.HEIGHT);
+      
+      int processHeight = p.HEIGHT * processWidth / p.WIDTH;
+      rect(simWidth * p.getPos() / DISK_SIZE, sceneHeight - processHeight/2, processWidth, processHeight);
     }
+    
+    // draw head
     fill (100, 100, 60);
-    rect(simWidth * simulation.getPos() / DISK_SIZE, sceneHeight - simulation.HEIGHT/2, simulation.WIDTH, simulation.HEIGHT);
+    rect(simWidth * simulation.getPos() / DISK_SIZE, sceneHeight - headHeight/2, headWidth, headHeight);
     
-    
+    // draw text
     fill(0);
-    translate(sceneWidth/2 - simulation.WIDTH/2, sceneHeight + 3 * margin/4);
-    //fill(255, 0, 0);
-    //rect(0,0, 100, 100);
+    translate(sceneWidth/2 - headWidth/2, sceneHeight + 3 * margin/4);
     text(this.sceneName, 0, 0);
     popMatrix(); 
  }
