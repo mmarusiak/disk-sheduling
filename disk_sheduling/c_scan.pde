@@ -16,7 +16,7 @@ public class CScan extends Algorithm {
    if (!processesLeft()) return;
    
    process();
-   this.move(this.step);
+   this.go(this.step);
    if (this.pos == this.diskSize) restartHead();
  }
  

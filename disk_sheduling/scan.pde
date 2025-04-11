@@ -15,7 +15,9 @@ public class Scan extends Algorithm {
    if (!processesLeft()) return;
    
    process();
-   this.move(this.step);
+   this.go(this.step);
+   print("moved by: " + this.step);
+   print("moves: " + this.moves());
    if (this.pos == this.diskSize) this.step = -1;
    else if (this.pos == 0) this.step = 1;
  }

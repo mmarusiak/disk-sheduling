@@ -8,7 +8,7 @@ public abstract class Algorithm{
   protected int processed;
   protected Generator generator;
   
-  private double moves, killed, starved;
+  private double moves = 0, killed = 0, starved = 0;
   
   public Algorithm(int startPos, String name, Generator generator, int count){
     this.pos = startPos;
@@ -64,8 +64,8 @@ public abstract class Algorithm{
     return pos;
   }
   
-  public void move(int delta){
-    moves += abs(delta);
+  public void go(int delta){
+    this.moves += abs(delta);
     this.pos += delta; 
   }
   
@@ -99,6 +99,10 @@ public abstract class Algorithm{
   
   public double starved(){
     return this.starved;
+  }
+  
+  public void setCount(int count){
+    this.processesCount = count;
   }
   
   public abstract Algorithm clone();

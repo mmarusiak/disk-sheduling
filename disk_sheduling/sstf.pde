@@ -12,8 +12,8 @@ public class SSTF extends Algorithm {
    if (!processesLeft() || (this.currentProcess == null && !this.getCurrentProcess())) return;
    if (currentProcess.getArrivalTime() > this.time) return;
    int targetPos = currentProcess.getPos();
-   if(this.pos > targetPos) this.move(-1);
-   else this.move(1);
+   if(this.pos > targetPos) this.go(-1);
+   else this.go(1);
    
    if (this.pos == targetPos){
      this.process();
