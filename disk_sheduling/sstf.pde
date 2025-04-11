@@ -12,8 +12,8 @@ public class SSTF extends Algorithm {
    if (!processesLeft() || (this.currentProcess == null && !this.getCurrentProcess())) return;
    if (currentProcess.getArrivalTime() > this.time) return;
    int targetPos = currentProcess.getPos();
-   if(this.pos > targetPos) this.pos--;
-   else this.pos++;
+   if(this.pos > targetPos) this.move(-1);
+   else this.move(1);
    
    if (this.pos == targetPos){
      this.process();
@@ -34,5 +34,10 @@ public class SSTF extends Algorithm {
      break;
    }
    return currentProcess != null;
+ }
+ 
+ @Override
+ public Algorithm clone(){
+   return new SSTF(this.pos, this.name, this.generator.clone(), this.processesCount);
  }
 }

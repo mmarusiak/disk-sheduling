@@ -8,10 +8,15 @@ public class FCFS extends Algorithm {
    if (!processesLeft()) return;
    if (this.processes.size() == 0 || this.processes.get(0).getArrivalTime() > this.time) return;
    int targetPos = this.processes.get(0).getPos();
-   if(this.pos > targetPos) this.pos--;
-   else this.pos++;
+   if(this.pos > targetPos) this.move(-1);
+   else this.move(1);
    
    if (this.pos == targetPos) this.process();
    //print(this.getPos());
+ }
+ 
+ @Override
+ public Algorithm clone(){
+   return new FCFS(this.pos, this.name, this.generator.clone(), this.processesCount);
  }
 }

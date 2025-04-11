@@ -16,12 +16,17 @@ public class CScan extends Algorithm {
    if (!processesLeft()) return;
    
    process();
-   this.pos += this.step;
+   this.move(this.step);
    if (this.pos == this.diskSize) restartHead();
  }
  
  private void restartHead(){
    this.pos = 0;
    restarts ++;
+ }
+ 
+ @Override
+ public Algorithm clone(){
+   return new CScan(this.pos, this.name, this.generator.clone(), this.processesCount, this.diskSize);
  }
 }

@@ -15,8 +15,13 @@ public class Scan extends Algorithm {
    if (!processesLeft()) return;
    
    process();
-   this.pos += this.step;
+   this.move(this.step);
    if (this.pos == this.diskSize) this.step = -1;
    else if (this.pos == 0) this.step = 1;
+ }
+ 
+ @Override
+ public Algorithm clone(){
+   return new Scan(this.pos, this.name, this.generator.clone(), this.processesCount, this.diskSize);
  }
 }

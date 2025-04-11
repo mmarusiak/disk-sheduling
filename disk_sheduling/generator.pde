@@ -17,4 +17,6 @@ public abstract class Generator {
     generate();
     return currentProcesses;
   }
+  
+  public abstract Generator clone();
 }

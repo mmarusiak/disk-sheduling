@@ -14,4 +14,9 @@ public class RandomGenerator extends Generator {
     this.currentProcesses = new Process[amount];
     for(int i = 0; i < amount; this.currentProcesses[i++] = new Process(false, (int)random(DISK_SIZE), this.currentTime));
   }
+  
+  @Override
+  public Generator clone(){
+    return new RandomGenerator(this.processThreshold);
+  }
 }

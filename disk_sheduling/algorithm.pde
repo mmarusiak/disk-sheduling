@@ -4,14 +4,18 @@ public abstract class Algorithm{
   protected ArrayList<Process> processes;
   protected int time;
   protected int avgWaitingTime = 0;
-  private int processesCount;
-  private Generator generator;
+  protected int processesCount;
+  protected int processed;
+  protected Generator generator;
+  
+  private double moves, killed, starved;
   
   public Algorithm(int startPos, String name, Generator generator, int count){
     this.pos = startPos;
     this.name = name;
     this.generator = generator;
     this.processesCount = count;
+    this.processed = 0;
     this.processes = new ArrayList<Process>();
     this.time = 0;
   }
@@ -28,12 +32,12 @@ public abstract class Algorithm{
       }
       this.avgWaitingTime += this.processes.get(i).getWaitingTime();
       this.processes.remove(i);
-      processesCount --;
+      this.processed ++;
     }
   }
   
   public boolean processesLeft(){
-    return processesCount > 0;
+    return processesCount - processed > 0;
   }
   
   public boolean anyRealTime(){
@@ -60,6 +64,11 @@ public abstract class Algorithm{
     return pos;
   }
   
+  public void move(int delta){
+    moves += abs(delta);
+    this.pos += delta; 
+  }
+  
   public String getName(){
     return name; 
   }
@@ -76,7 +85,21 @@ public abstract class Algorithm{
     return processes; 
   }
   
-  public float getAvgWaitingTime(int count){
-    return this.avgWaitingTime / count;
+  public double avgWaitingTime(){
+    return this.avgWaitingTime / this.processesCount;
   }
+  
+  public double moves(){
+    return this.moves; 
+  }
+  
+  public double killed(){
+    return this.killed; 
+  }
+  
+  public double starved(){
+    return this.starved;
+  }
+  
+  public abstract Algorithm clone();
 }
