@@ -32,8 +32,8 @@ class Scene{
     // draw processes
     int processWidth = sceneWidth / DISK_SIZE;
     // i think we should move it to disk sheduling class! if no processes on screen all objects are bigger!
-    int headWidth = simulation.processes.size() > 0 ? simulation.WIDTH * processWidth / simulation.processes.get(0).WIDTH : simulation.WIDTH;
-    int headHeight = simulation.processes.size() > 0 ? simulation.HEIGHT * processWidth / simulation.processes.get(0).WIDTH : simulation.HEIGHT;
+    int headWidth = HEAD_WIDTH * processWidth / PROCESS_WIDTH;
+    int headHeight = HEAD_HEIGHT * processWidth / PROCESS_WIDTH;
     int simWidth = sceneWidth - headWidth;
     
     translate (headWidth/2, 0);
@@ -45,12 +45,12 @@ class Scene{
         fill(255 * c_multiplier, 0, 0);
       }
       else {
-        float c_multiplier = ((float)(min(p.getWaitingTime(), p.STARVATION)/ (float)p.STARVATION));
+        float c_multiplier = ((float)(min(p.getWaitingTime(), STARVATION)/ (float)STARVATION));
         fill(50 + 205 * c_multiplier);
       }
       
       
-      int processHeight = p.HEIGHT * processWidth / p.WIDTH;
+      int processHeight = PROCESS_HEIGHT * processWidth / PROCESS_WIDTH;
       rect(simWidth * p.getPos() / DISK_SIZE, sceneHeight - processHeight/2, processWidth, processHeight);
     }
     

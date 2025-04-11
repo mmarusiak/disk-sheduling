@@ -1,6 +1,11 @@
-int DISK_SIZE = 50;
-int START_POS = 0;
-int PROCESSES_COUNT = 200;
+final int DISK_SIZE = 50;
+final int START_POS = 0;
+final int PROCESSES_COUNT = 200;
+
+final int PROCESS_WIDTH = 40, PROCESS_HEIGHT = 60, STARVATION = 100;
+final int HEAD_WIDTH = 100, HEAD_HEIGHT = 100;
+
+//https://github.com/jagracar/grafica/blob/master/examples/MultiplePlots/MultiplePlots.pde
 
 Generator gen = new RandomGenerator(9);
   

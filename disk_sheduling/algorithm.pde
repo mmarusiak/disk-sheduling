@@ -7,8 +7,6 @@ abstract class Algorithm{
   private int processesCount;
   private Generator generator;
   
-  public final int WIDTH = 100, HEIGHT = 100;
-  
   public Algorithm(int startPos, String name, Generator generator, int count){
     this.pos = startPos;
     this.name = name;

@@ -6,8 +6,6 @@ class Process {
   private int waitingTime = 0;
   private int timeToProcess = 0;
   
-  public final int WIDTH = 40, HEIGHT = 100, STARVATION = 50;
-  
   public Process(boolean isRT, int pos, int arrivalTime){
     this.isRealTime = isRT;
     this.pos = pos;
