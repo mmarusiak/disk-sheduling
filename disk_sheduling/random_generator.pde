@@ -1,4 +1,4 @@
-class RandomGenerator extends Generator {
+public class RandomGenerator extends Generator {
   
   private float processThreshold;
   

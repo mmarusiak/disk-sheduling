@@ -1,6 +1,4 @@
-
-
-class View {
+public class View {
   private int screens;
   private ArrayList<Scene> scenes = new ArrayList<Scene>();
   private int margin;

@@ -1,4 +1,4 @@
-class Scene{
+public class Scene{
  private int xOffset, yOffset, sceneHeight, sceneWidth;
  private int margin;
  private int row, col;

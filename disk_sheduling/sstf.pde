@@ -1,4 +1,4 @@
-class SSTF extends Algorithm {
+public class SSTF extends Algorithm {
   private Process currentProcess = null;
   
   public SSTF(int startX, String name, Generator generator, int processesCount){

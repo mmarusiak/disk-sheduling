@@ -1,4 +1,4 @@
-class FCFS extends Algorithm {
+public class FCFS extends Algorithm {
   public FCFS(int startX, String name, Generator generator, int processesCount){
     super(startX, name, generator, processesCount);
   }

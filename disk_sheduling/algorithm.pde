@@ -1,4 +1,4 @@
-abstract class Algorithm{
+public abstract class Algorithm{
   protected int pos;
   protected String name;
   protected ArrayList<Process> processes;

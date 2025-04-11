@@ -1,4 +1,4 @@
-class CScan extends Algorithm {
+public class CScan extends Algorithm {
   private int step;
   private int diskSize;
   private int restarts = 0;

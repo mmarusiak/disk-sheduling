@@ -1,4 +1,4 @@
-class Scan extends Algorithm {
+public class Scan extends Algorithm {
   private int step;
   private int diskSize;
   

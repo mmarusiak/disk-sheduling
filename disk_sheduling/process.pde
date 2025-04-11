@@ -1,4 +1,4 @@
-class Process {
+public class Process {
  
   private boolean isRealTime = false;
   private int pos;

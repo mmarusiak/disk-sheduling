@@ -1,4 +1,4 @@
-abstract class Generator {
+public abstract class Generator {
  
   protected Process[] currentProcesses;
   protected int currentTime;
