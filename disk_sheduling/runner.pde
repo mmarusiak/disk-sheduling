@@ -1,39 +1,42 @@
 import java.util.function.Function;
+import java.util.Map;
+import java.util.Set;
 
 public class Runner {
   
-  private double pKilled, pStarved, moves, waitingTime;
-  private double stddev_pKilled, stddev_pStarved, stddev_moves, stddev_waitingTime;
+  public final String k_name = "processes killed", s_name = "processes starved", h_name = "head moves", a_name = "average waiting times";
+  
+  private Map<String, Double> avg_fields = new HashMap<String, Double>();
+  private Map<String, Double> stddev_fields = new HashMap<String, Double>();
+  
   
   public Runner(int reps, Algorithm alg){
-    runSimulation(reps, alg, Algorithm::killed, Algorithm::starved,  Algorithm::moves, Algorithm::avgWaitingTime);
+    runSimulation(reps, alg, 
+      new Metric(k_name, Algorithm::killed), 
+      new Metric(s_name, Algorithm::starved),  
+      new Metric(h_name, Algorithm::moves),
+      new Metric(a_name, Algorithm::avgWaitingTime));
   }
   
-  public void runSimulation(int reps, Algorithm alg, Function<Algorithm, Double>... fields){
-    ArrayList<Double>[] results = new ArrayList[fields.length];
+  public void runSimulation(int reps, Algorithm alg, Metric... metrics){
+    ArrayList<Double>[] results = new ArrayList[metrics.length];
     
     for(int i = 0; i < reps; i ++){
       Algorithm a = alg.clone();
       while(a.processesLeft()){
         a.iteration();
       }
-      for (int j = 0; j < fields.length; j ++){
+      for (int j = 0; j < metrics.length; j ++){
         if (results[j] == null) results[j] = new ArrayList<Double>();
-        results[j].add(fields[j].apply(a));
+        results[j].add(metrics[j].function.apply(a));
       }
     }
     
-    pKilled = getAvg(results[0]);
-    pStarved = getAvg(results[1]);
-    moves = getAvg(results[2]);
-    waitingTime = getAvg(results[3]);
-    //print(moves);
-    
-    
-    stddev_pKilled = getstddev(results[0], pKilled);
-    stddev_pStarved = getstddev(results[1], pStarved);
-    stddev_moves = getstddev(results[2], moves);
-    stddev_waitingTime = getstddev(results[3], waitingTime);
+    for (int i = 0; i < metrics.length; i ++){
+      double avg_field = getAvg(results[i]);
+      avg_fields.put(metrics[i].name, avg_field);
+      stddev_fields.put(metrics[i].name, getStddev(results[i], avg_field));
+    }
   }
   
   private double getAvg(ArrayList<Double> source){
@@ -44,14 +47,24 @@ public class Runner {
     return sum / source.size();
   }
   
-  private double getstddev(ArrayList<Double> source, double avg){
+  private double getStddev(ArrayList<Double> source, double avg){
     double sqrts = 0;  
     for(double d : source) sqrts += Math.pow(d - avg, 2);
     return Math.sqrt(sqrts / (source.size() - 1));
   }
   
-  public double getMoves() { return this.moves; }
-  public double getKilled() { return this.pKilled; }
-  public double getStarved() { return this.pStarved; }
-  public double getTime() { return this.waitingTime; }
+  public Set<String> fieldNames(){ return avg_fields.keySet(); }
+  
+  public double getAvgField(String fieldName) { return avg_fields.get(fieldName); }
+  public double getStddevField(String fieldName) { return stddev_fields.get(fieldName); }
+  
+  public double getAvgKilled() { return getAvgField(k_name); }
+  public double getAvgStarved() { return getAvgField(s_name); }
+  public double getAvgMoves() { return getAvgField(h_name); }
+  public double getAvgTime() { return getAvgField(a_name); }
+  
+  public double getStddevKilled() { return getStddevField(k_name); }
+  public double getStddevStarved() { return getStddevField(s_name); }
+  public double getStddevMoves() { return getStddevField(h_name); }
+  public double getStddevTime() { return getStddevField(a_name); }
 }

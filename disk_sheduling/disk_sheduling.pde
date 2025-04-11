@@ -11,7 +11,7 @@ final int HEAD_WIDTH = 100, HEAD_HEIGHT = 100;
 
 Generator gen = new RandomGenerator(9);
 View view;
-boolean visualize = true;
+boolean visualize = false;
 
 void setup() {
   size(1260, 500);

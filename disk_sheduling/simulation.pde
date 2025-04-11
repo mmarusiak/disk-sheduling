@@ -11,9 +11,9 @@ public class Simulation {
      alg.setCount(data);
      Runner r = new Runner(reps, alg);
      x.add((double)data);
-     moves.add((double)r.getMoves());
-     killed.add((double)r.getKilled());
-     starved.add((double)r.getStarved());
+     moves.add((double)r.getAvgMoves());
+     killed.add((double)r.getAvgKilled());
+     starved.add((double)r.getAvgStarved());
    }
  }
  
