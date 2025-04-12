@@ -7,6 +7,8 @@ final int PROCESSES_COUNT = 200;
 final int PROCESS_WIDTH = 40, PROCESS_HEIGHT = 60, STARVATION = 100;
 final int HEAD_WIDTH = 100, HEAD_HEIGHT = 100;
 
+final color[] PLOT_COLORS = new color[] { color (255, 0, 255), color (255, 0, 0), color (0, 255, 0), color (0, 0, 255), color (0, 255, 255) };
+
 //https://github.com/jagracar/grafica/blob/master/examples/MultiplePlots/MultiplePlots.pde
 
 Generator gen = new RandomGenerator(9);
@@ -17,12 +19,19 @@ void setup() {
   size(1260, 500);
   noStroke();
   rectMode(CENTER);
+  background(255);
   view = new View(20, new Scene(d_FCFS()), new Scene(d_SSTF()), new Scene(d_Scan()), new Scene(d_CScan()));
   Algorithm[] algs = new Algorithm[] {(d_FCFS()), (d_SSTF()), (d_Scan()), (d_CScan()) };
   
-  Simulation sim = new Simulation(10, 100, 2, algs[2]);
+  Simulation sim = new Simulation(10, 100, 2, algs);
+  int i = 0;
+  for (String s : sim.results.keySet()) {
+    graph(sim.getX(), sim.results.get(s), "processes amount", s, s, width * i /algs.length, 0, width/algs.length, height/algs.length); 
+    i += 1;
+  }
+  String s = "head moves";
+  graph(sim.getX(), sim.results.get(s), "processes amount", s, s, 0, 0, 700, 300); 
   
-  graph(sim.getX(), sim.getMoves(), "processes amount", "moves", "simple graph");
   print("done");
 }
 
@@ -57,29 +66,52 @@ ArrayList<Process> cloneProcesses(ArrayList<Process> src){
 }
 
 
-void graph(ArrayList<Double> x, ArrayList<Double> y, String xLabel, String yLabel, String graphTitle){
-    if(x.size() != y.size()) throw new IllegalArgumentException();
-    
-    GPointsArray points = new GPointsArray(x.size());
-  
-    for (int i = 0; i < x.size(); i++) {
-      points.add(x.get(i).floatValue(), y.get(i).floatValue());
-    }
+void graph(ArrayList<Double> x, ArrayList<Result> ySeries, String xLabel, String yLabel, String graphTitle, int xOffset, int yOffset, int plotWidth, int plotHeight){
+    if(x.size() != ySeries.get(0).averages.size()) throw new IllegalArgumentException();
   
     // Create a new plot and set its position on the screen
-    GPlot plot = new GPlot(this);
-    plot.setPos(25, 25);
-    // or all in one go
-    // GPlot plot = new GPlot(this, 25, 25);
+    GPlot plot = new GPlot(this, xOffset, yOffset);
+    plot.setDim(plotWidth, plotHeight);
+    
+    String[] names = new String[ySeries.size()];
+    float[] xPos = new float[ySeries.size()];
+    float[] yPos = new float[ySeries.size()];
+    
+    for (int j = 0; j < ySeries.size(); j ++){
+      Result record = ySeries.get(j);
+      int n = min(record.averages.size(), x.size());
+      GPointsArray points = new GPointsArray();
+      for(int i = 0; i < n; i ++){
+          points.add(x.get(i).floatValue(), record.averages.get(i).floatValue());
+      }
+      names[j] = record.sourceName;
+      yPos[j] = 0.92;
+      xPos[j] = j == 0 ? 0.07 : xPos[j-1] + 0.15;
+      if (j == 0){
+        plot.setPoints(points);
+        plot.setLineColor(PLOT_COLORS[0]);
+        continue;
+      }
+      plot.addLayer(record.sourceName, points);
+      plot.getLayer(record.sourceName).setLineColor(PLOT_COLORS[j%PLOT_COLORS.length]);
+    }
+    
+    plot.drawLegend(names, yPos, xPos);
   
     // Set the plot title and the axis labels
     plot.setTitleText(graphTitle);
     plot.getXAxis().setAxisLabelText(xLabel);
     plot.getYAxis().setAxisLabelText(yLabel);
   
-    // Add the points
-    plot.setPoints(points);
   
-    // Draw it!
-    plot.defaultDraw();
+    plot.beginDraw();
+    plot.drawBox();
+    plot.drawXAxis();
+    plot.drawYAxis();
+    plot.drawTitle();
+    plot.drawGridLines(GPlot.BOTH);
+    plot.drawLines();
+    plot.drawLegend(names, xPos, yPos);
+    plot.drawLabels();
+    plot.endDraw();
 }
