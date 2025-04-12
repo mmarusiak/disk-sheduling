@@ -4,7 +4,7 @@ public class Process {
   private int pos;
   private int arrivalTime;
   private int waitingTime = 0;
-  private int timeToProcess = 0;
+  private int deadline = 0;
   
   public Process(boolean isRT, int pos, int arrivalTime){
     this.isRealTime = isRT;
@@ -32,8 +32,8 @@ public class Process {
     return this.waitingTime; 
   }
   
-  public int getTimeToProcess(){
-    return this.timeToProcess;
+  public int getDeadline(){
+    return this.deadline;
   }
   
   public Process clone(){

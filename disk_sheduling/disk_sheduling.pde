@@ -2,7 +2,7 @@ import grafica.*;
 
 final int DISK_SIZE = 50;
 final int START_POS = 0;
-final int PROCESSES_COUNT = 200;
+final int PROCESSES_COUNT = 100;
 
 final int PROCESS_WIDTH = 40, PROCESS_HEIGHT = 60, STARVATION = 100;
 final int HEAD_WIDTH = 100, HEAD_HEIGHT = 100;
@@ -20,18 +20,8 @@ void setup() {
   noStroke();
   rectMode(CENTER);
   background(255);
-  view = new View(20, new Scene(d_FCFS()), new Scene(d_SSTF()), new Scene(d_Scan()), new Scene(d_CScan()));
-  Algorithm[] algs = new Algorithm[] {(d_FCFS()), (d_SSTF()), (d_Scan()), (d_CScan()) };
-  
-  Simulation sim = new Simulation(10, 100, 2, algs);
-  int i = 0;
-  for (String s : sim.results.keySet()) {
-    graph(sim.getX(), sim.results.get(s), "processes amount", s, s, width * i /algs.length, 0, width/algs.length, height/algs.length); 
-    i += 1;
-  }
-  String s = "head moves";
-  graph(sim.getX(), sim.results.get(s), "processes amount", s, s, 0, 0, 700, 300); 
-  
+  if (!visualize) displayGraphs();
+  else view = new View(20, new Scene(d_FCFS()), new Scene(d_SSTF()), new Scene(d_Scan()), new Scene(d_CScan()));
   print("done");
 }
 
@@ -39,6 +29,32 @@ void draw() {
   if(!visualize) return;
   background(255);
   view.drawView();
+}
+
+void displayGraphs(){
+  Algorithm[] algs = new Algorithm[] {(d_FCFS()), (d_SSTF()), (d_Scan()), (d_CScan()) };
+  
+  Simulation sim = new Simulation(10, PROCESSES_COUNT, 2, algs);
+  int numGraphs = algs.length;
+  int columns = (int) Math.ceil(Math.sqrt(numGraphs));
+  int rows = (int) Math.ceil((double) numGraphs / columns);
+
+  int cellWidth = width / columns;
+  int cellHeight = height / rows;
+
+  int i = 0;
+  for (String s : sim.results.keySet()) {
+    int row = i / columns;
+    int col = i % columns;
+
+    int x = col * cellWidth;
+    int y = row * cellHeight;
+
+    graph(sim.getX(), sim.results.get(s),
+        "processes amount", s, s,
+        x, y, cellWidth - 100, cellHeight - 100);
+    i++;
+  }
 }
 
 CScan d_CScan(){

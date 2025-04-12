@@ -41,7 +41,7 @@ public class Scene{
     for (Process p : simulation.processes){
       if(p.getArrivalTime() > simulation.getTime()) continue;
       if(p.isRealTime()){
-        float c_multiplier = (float)p.getWaitingTime() / (float)p.getTimeToProcess();
+        float c_multiplier = (float)p.getWaitingTime() / (float)p.getDeadline();
         fill(255 * c_multiplier, 0, 0);
       }
       else {

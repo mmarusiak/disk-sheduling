@@ -26,11 +26,14 @@ public abstract class Algorithm{
     // ends all tasks in desired position.
     int i = 0;
     while (i < processes.size()){
-      if(this.processes.get(i).getPos() != this.pos || this.processes.get(i).getArrivalTime() > this.time){
+      Process p = this.processes.get(i);
+      if(p.getPos() != this.pos ||p.getArrivalTime() > this.time){
         i ++;
         continue;
       }
-      this.avgWaitingTime += this.processes.get(i).getWaitingTime();
+      this.avgWaitingTime += p.getWaitingTime();
+      if(p.getWaitingTime() > STARVATION) starved ++;
+      if(p.isRealTime() && p.getWaitingTime() > p.getDeadline()) killed ++;
       this.processes.remove(i);
       this.processed ++;
     }
@@ -55,9 +58,9 @@ public abstract class Algorithm{
   
   public void iteration(){
     time ++;
+    waitProcesses();
     for (Process p : generator.getProcesses(time)) processes.add(p.clone());
     move();
-    waitProcesses();
   }
   
   public int getPos(){
