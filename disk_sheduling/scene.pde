@@ -40,19 +40,20 @@ public class Scene{
     
     for (Process p : simulation.processes){
       if(p.getArrivalTime() > simulation.getTime()) continue;
-      if(p.isRealTime()){
-        float c_multiplier = (float)p.getWaitingTime() / (float)p.getDeadline();
-        fill(255 * c_multiplier, 0, 0);
-      }
-      else {
-        float c_multiplier = ((float)(min(p.getWaitingTime(), STARVATION)/ (float)STARVATION));
-        fill(50 + 205 * c_multiplier);
-      }
-      
-      
-      int processHeight = PROCESS_HEIGHT * processWidth / PROCESS_WIDTH;
-      rect(simWidth * p.getPos() / DISK_SIZE, sceneHeight - processHeight/2, processWidth, processHeight);
+     
+      float c_multiplier = ((float)(min(p.getWaitingTime(), STARVATION)/ (float)STARVATION));
+      fill(50 + 205 * c_multiplier);
+      drawProcess(simWidth, processWidth, p);
     }
+    
+    for (Process p : simulation.rts){
+      if(p.getArrivalTime() > simulation.getTime()) continue;
+      
+      float c_multiplier = (float)p.getWaitingTime() / p.getDeadline();
+      fill(100 + 155 * c_multiplier, 0, 0);
+      drawProcess(simWidth, processWidth, p);
+    }
+   
     
     // draw head
     fill (100, 100, 60);
@@ -63,6 +64,11 @@ public class Scene{
     translate(sceneWidth/2 - headWidth/2, sceneHeight + 3 * margin/4);
     text(this.sceneName, 0, 0);
     popMatrix(); 
+ }
+ 
+ void drawProcess(int simWidth, int processWidth, Process p){
+   int processHeight = PROCESS_HEIGHT * processWidth / PROCESS_WIDTH;
+   rect(simWidth * p.getPos() / DISK_SIZE, sceneHeight - processHeight/2, processWidth, processHeight);
  }
  
  public int getXOffset(){

@@ -2,42 +2,54 @@ public abstract class Algorithm{
   protected int pos;
   protected String name;
   protected ArrayList<Process> processes;
+  protected ArrayList<Process> rts;
   protected int time;
   protected int avgWaitingTime = 0;
   protected int processesCount;
   protected int processed;
   protected Generator generator;
   
+  protected RealTimeSheduler rtSheduler = null;
+  
   private double moves = 0, killed = 0, starved = 0;
   
-  public Algorithm(int startPos, String name, Generator generator, int count){
+  public Algorithm(int startPos, String name, Generator generator, int count, RealTimeSheduler rt){
     this.pos = startPos;
     this.name = name;
     this.generator = generator;
     this.processesCount = count;
     this.processed = 0;
     this.processes = new ArrayList<Process>();
+    this.rts = new ArrayList<Process>(); 
+    this.rtSheduler = rt;
     this.time = 0;
+    
+    if(this.rtSheduler != null) rtSheduler.setAlgorithm(this);
   }
   
   abstract void move();
   
   public void process(){
+    processInList(processes);
+    processInList(rts);
+  }
+  
+  void processInList(ArrayList<Process> pList){
     // ends all tasks in desired position.
     int i = 0;
-    while (i < processes.size()){
-      Process p = this.processes.get(i);
+    while (i < pList.size()){
+      Process p = pList.get(i);
       if(p.getPos() != this.pos ||p.getArrivalTime() > this.time){
         i ++;
         continue;
       }
       this.avgWaitingTime += p.getWaitingTime();
       if(p.getWaitingTime() > STARVATION) starved ++;
-      if(p.isRealTime() && p.getWaitingTime() > p.getDeadline()) killed ++;
-      this.processes.remove(i);
+      pList.remove(i);
       this.processed ++;
     }
   }
+  
   
   public boolean processesLeft(){
     return processesCount - processed > 0;
@@ -46,21 +58,37 @@ public abstract class Algorithm{
   public boolean anyRealTime(){
     // if there is any real time task returns true.
     if (!processesLeft()) return false;
-    for (var process : processes) {
-      if (process.isRealTime()) return true;
-    }
-    return false;
+    
+    return rts.size() > 0;
   }
   
   public void waitProcesses(){
     for(Process process : processes) process.wait(time);
+    
+    int i = 0;
+    while(i < rts.size()) {
+      Process process = rts.get(i);
+      process.wait(time);
+      if (process.getDeadline() <= process.getWaitingTime()){
+        rts.remove(i);
+        killed++;
+        processed++;
+        if(rtSheduler != null) rtSheduler.selectProcess(rts);
+        continue;
+      }
+       i += 1;
+    }
   }
   
   public void iteration(){
     time ++;
     waitProcesses();
-    for (Process p : generator.getProcesses(time)) processes.add(p.clone());
-    move();
+    for (Process p : generator.getProcesses(time)) {
+      if(!p.isRealTime()) this.processes.add(p.clone());
+      else this.rts.add(p.clone());
+    }
+    if(anyRealTime() && rtSheduler != null) go(rtSheduler.move(rts, processes, pos));
+    else move();
   }
   
   public int getPos(){
@@ -106,6 +134,10 @@ public abstract class Algorithm{
   
   public void setCount(int count){
     this.processesCount = count;
+  }
+  
+  public void countProcessed(){
+    processed ++;
   }
   
   public abstract Algorithm clone();

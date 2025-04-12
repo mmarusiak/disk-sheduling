@@ -6,10 +6,11 @@ public class Process {
   private int waitingTime = 0;
   private int deadline = 0;
   
-  public Process(boolean isRT, int pos, int arrivalTime){
+  public Process(boolean isRT, int pos, int arrivalTime, int deadline){
     this.isRealTime = isRT;
     this.pos = pos;
     this.arrivalTime = arrivalTime;
+    this.deadline = deadline;
   }
   
   public boolean isRealTime(){
@@ -37,6 +38,6 @@ public class Process {
   }
   
   public Process clone(){
-    return new Process(this.isRealTime, this.pos, this.arrivalTime);
+    return new Process(this.isRealTime, this.pos, this.arrivalTime, this.deadline);
   }
 }

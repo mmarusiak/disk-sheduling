@@ -13,7 +13,7 @@ final color[] PLOT_COLORS = new color[] { color (255, 0, 255), color (255, 0, 0)
 
 Generator gen = new RandomGenerator(9);
 View view;
-boolean visualize = false;
+boolean visualize = true;
 
 void setup() {
   size(1260, 500);
@@ -34,7 +34,9 @@ void draw() {
 void displayGraphs(){
   Algorithm[] algs = new Algorithm[] {(d_FCFS()), (d_SSTF()), (d_Scan()), (d_CScan()) };
   
-  Simulation sim = new Simulation(10, PROCESSES_COUNT, 2, algs);
+  int step = 1, reps = 10;
+  
+  Simulation sim = new Simulation(step, PROCESSES_COUNT, reps, algs);
   int numGraphs = algs.length;
   int columns = (int) Math.ceil(Math.sqrt(numGraphs));
   int rows = (int) Math.ceil((double) numGraphs / columns);
@@ -58,19 +60,19 @@ void displayGraphs(){
 }
 
 CScan d_CScan(){
-   return new CScan(START_POS, "C-Scan", gen, PROCESSES_COUNT, DISK_SIZE); 
+   return new CScan(START_POS, "C-Scan", gen, PROCESSES_COUNT, DISK_SIZE, null); 
 }
 
 Scan d_Scan(){
-   return new Scan(START_POS, "Scan", gen, PROCESSES_COUNT, DISK_SIZE); 
+   return new Scan(START_POS, "Scan", gen, PROCESSES_COUNT, DISK_SIZE, new EDF()); 
 }
 
 FCFS d_FCFS(){
-   return new FCFS(START_POS, "FCFS", gen, PROCESSES_COUNT); 
+   return new FCFS(START_POS, "FCFS", gen, PROCESSES_COUNT, new EDF()); 
 }
 
 SSTF d_SSTF(){
-   return new SSTF(START_POS, "SSTF", gen, PROCESSES_COUNT); 
+   return new SSTF(START_POS, "SSTF", gen, PROCESSES_COUNT, null); 
 }
 
 ArrayList<Process> cloneProcesses(ArrayList<Process> src){

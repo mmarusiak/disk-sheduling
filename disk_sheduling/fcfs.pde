@@ -1,6 +1,6 @@
 public class FCFS extends Algorithm {
-  public FCFS(int startX, String name, Generator generator, int processesCount){
-    super(startX, name, generator, processesCount);
+  public FCFS(int startX, String name, Generator generator, int processesCount, RealTimeSheduler rt){
+    super(startX, name, generator, processesCount, rt);
   }
   
  @Override
@@ -17,6 +17,6 @@ public class FCFS extends Algorithm {
  
  @Override
  public Algorithm clone(){
-   return new FCFS(this.pos, this.name, this.generator.clone(), this.processesCount);
+   return new FCFS(this.pos, this.name, this.generator.clone(), this.processesCount, this.rtSheduler);
  }
 }

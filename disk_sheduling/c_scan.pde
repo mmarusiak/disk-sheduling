@@ -3,8 +3,8 @@ public class CScan extends Algorithm {
   private int diskSize;
   private int restarts = 0;
   
-  public CScan(int startX, String name, Generator generator, int processesCount, int diskSize){
-    super(startX, name, generator, processesCount);
+  public CScan(int startX, String name, Generator generator, int processesCount, int diskSize, RealTimeSheduler rt){
+    super(startX, name, generator, processesCount, rt);
     
     this.diskSize = diskSize;
     if (this.pos > this.diskSize) this.step = -1;
@@ -27,6 +27,6 @@ public class CScan extends Algorithm {
  
  @Override
  public Algorithm clone(){
-   return new CScan(this.pos, this.name, this.generator.clone(), this.processesCount, this.diskSize);
+   return new CScan(this.pos, this.name, this.generator.clone(), this.processesCount, this.diskSize, this.rtSheduler);
  }
 }

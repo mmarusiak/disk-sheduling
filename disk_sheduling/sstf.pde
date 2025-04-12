@@ -1,8 +1,8 @@
 public class SSTF extends Algorithm {
   private Process currentProcess = null;
   
-  public SSTF(int startX, String name, Generator generator, int processesCount){
-    super(startX, name, generator, processesCount);
+  public SSTF(int startX, String name, Generator generator, int processesCount, RealTimeSheduler rt){
+    super(startX, name, generator, processesCount, rt);
     sortProcesses();
     getCurrentProcess();
   }
@@ -23,7 +23,8 @@ public class SSTF extends Algorithm {
  }
  
  private void sortProcesses(){
-    this.processes.sort((p1, p2) -> abs(p1.getPos() - this.getPos()) - abs(p2.getPos() - this.getPos()));
+    this.processes.sort((p1, p2) -> abs(p1.getPos() - this.getPos()) - abs(p2.getPos() - this.getPos())); 
+    this.rts.sort((p1, p2) -> abs(p1.getPos() - this.getPos()) - abs(p2.getPos() - this.getPos()));
  }
  
  private boolean getCurrentProcess(){
@@ -33,11 +34,17 @@ public class SSTF extends Algorithm {
      this.currentProcess = p;
      break;
    }
+   
+   for (Process p : this.rts){
+     if (p.arrivalTime > this.time) continue;
+     if (currentProcess != null && abs(p.getPos() - this.getPos()) > abs(currentProcess.getPos() - this.getPos())) break;
+     currentProcess = p;
+   }
    return currentProcess != null;
  }
  
  @Override
  public Algorithm clone(){
-   return new SSTF(this.pos, this.name, this.generator.clone(), this.processesCount);
+   return new SSTF(this.pos, this.name, this.generator.clone(), this.processesCount, this.rtSheduler);
  }
 }

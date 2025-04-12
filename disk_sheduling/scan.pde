@@ -2,8 +2,8 @@ public class Scan extends Algorithm {
   private int step;
   private int diskSize;
   
-  public Scan(int startX, String name, Generator generator, int processesCount, int diskSize){
-    super(startX, name, generator, processesCount);
+  public Scan(int startX, String name, Generator generator, int processesCount, int diskSize, RealTimeSheduler rt){
+    super(startX, name, generator, processesCount, rt);
     
     this.diskSize = diskSize;
     if (this.pos > this.diskSize) this.step = -1;
@@ -22,6 +22,6 @@ public class Scan extends Algorithm {
  
  @Override
  public Algorithm clone(){
-   return new Scan(this.pos, this.name, this.generator.clone(), this.processesCount, this.diskSize);
+   return new Scan(this.pos, this.name, this.generator.clone(), this.processesCount, this.diskSize, this.rtSheduler);
  }
 }
