@@ -24,14 +24,16 @@ public class Simulation {
  private void runForAlgorithm(Algorithm alg, int reps, int data){
   alg.setCount(data);
   Runner r = new Runner(reps, alg);
-     
+  String algName = alg.getClass().getSimpleName();
+  if (alg.rtSheduler != null) algName += "_" + alg.rtSheduler.getClass().getSimpleName();
+  
   for(String type : r.fieldNames()){
     if (!results.containsKey(type)){
      results.put(type, new ArrayList<Result>()); 
     }
     boolean found = false;
     for(Result record : results.get(type)){
-      if(record.sourceName == alg.getClass().getSimpleName()) {
+      if(record.sourceName.equals(algName)) {
          record.stddevs.add(r.getStddevField(type));
          record.averages.add(r.getAvgField(type));
          found = true;
@@ -39,7 +41,7 @@ public class Simulation {
       }
     }
     if (!found) {
-      Result record = new Result(alg.getClass().getSimpleName(), type);
+      Result record = new Result(algName, type);
       record.stddevs.add(r.getStddevField(type));
       record.averages.add(r.getAvgField(type));
       results.get(type).add(record);
