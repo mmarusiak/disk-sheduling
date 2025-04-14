@@ -41,16 +41,15 @@ public class Scene{
     for (Process p : simulation.processes){
       if(p.getArrivalTime() > simulation.getTime()) continue;
      
-      float c_multiplier = ((float)(min(p.getWaitingTime(), STARVATION)/ (float)STARVATION));
-      fill(50 + 205 * c_multiplier);
+      if(!p.isRealTime()) fillNormal(p);
+      else fillRt(p);
       drawProcess(simWidth, processWidth, p);
     }
     
     for (Process p : simulation.rts){
       if(p.getArrivalTime() > simulation.getTime()) continue;
       
-      float c_multiplier = (float)p.getWaitingTime() / p.getDeadline();
-      fill(100 + 155 * c_multiplier, 0, 0);
+      fillRt(p);
       drawProcess(simWidth, processWidth, p);
     }
    
@@ -69,6 +68,16 @@ public class Scene{
  void drawProcess(int simWidth, int processWidth, Process p){
    int processHeight = PROCESS_HEIGHT * processWidth / PROCESS_WIDTH;
    rect(simWidth * p.getPos() / DISK_SIZE, sceneHeight - processHeight/2, processWidth, processHeight);
+ }
+ 
+ private void fillRt(Process p){
+   float c_multiplier = (float)p.getWaitingTime() / p.getDeadline();
+   fill(100 + 155 * c_multiplier, 0, 0);
+ }
+ 
+ private void fillNormal(Process p){
+   float c_multiplier = ((float)(min(p.getWaitingTime(), STARVATION)/ (float)STARVATION));
+   fill(50 + 205 * c_multiplier);
  }
  
  public int getXOffset(){

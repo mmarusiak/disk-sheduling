@@ -63,17 +63,22 @@ public abstract class Algorithm{
   }
   
   public void waitProcesses(){
-    for(Process process : processes) process.wait(time);
-    
+    waitList(processes);
+    waitList(rts);
+  }
+  
+  private void waitList(ArrayList<Process> list){
     int i = 0;
-    while(i < rts.size()) {
-      Process process = rts.get(i);
+    while(i < list.size()) {
+      Process process = list.get(i);
       process.wait(time);
-      if (process.getDeadline() <= process.getWaitingTime()){
-        rts.remove(i);
-        killed++;
-        processed++;
-        if(rtSheduler != null) rtSheduler.selectProcess(rts);
+      if (process.isRealTime() && process.getDeadline() <= process.getWaitingTime()){
+        list.remove(i);
+        this.killed++;
+        this.processed++;
+        this.starved++;
+        this.avgWaitingTime += process.getWaitingTime();
+        if(rtSheduler != null) rtSheduler.selectProcess(list);
         continue;
       }
        i += 1;
@@ -84,7 +89,7 @@ public abstract class Algorithm{
     time ++;
     waitProcesses();
     for (Process p : generator.getProcesses(time)) {
-      if(!p.isRealTime()) this.processes.add(p.clone());
+      if(!p.isRealTime() || rtSheduler == null) this.processes.add(p.clone());
       else this.rts.add(p.clone());
     }
     if(anyRealTime() && rtSheduler != null) go(rtSheduler.move(rts, processes, pos));
