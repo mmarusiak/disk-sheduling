@@ -11,11 +11,11 @@ final int PROCESS_WIDTH = 40, PROCESS_HEIGHT = 60, STARVATION = 100;
 final int HEAD_WIDTH = 100, HEAD_HEIGHT = 100;
 
 final Generator gen = new RandomGenerator(9);
-final Algorithm[] ALGS = new Algorithm[] { d_FCFS(new EDF()), d_FCFS(null)};
+final Algorithm[] ALGS = new Algorithm[] { d_FCFS(new EDF()), d_FCFS(new FDScan()), d_FCFS(null)};
 
 final color[] PLOT_COLORS = new color[] { color (255, 0, 255), color (255, 0, 0), color (0, 255, 0), color (0, 0, 255), color (0, 255, 255) };
 
-final boolean visualize = false;
+final boolean visualize = true;
 
 //https://github.com/jagracar/grafica/blob/master/examples/MultiplePlots/MultiplePlots.pde
 
