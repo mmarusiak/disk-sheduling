@@ -2,18 +2,24 @@ import grafica.*;
 
 final int DISK_SIZE = 50;
 final int START_POS = 0;
-final int PROCESSES_COUNT = 500;
+final int PROCESSES_COUNT = 1000;
+
+final int REPS = 20;
+final int STEP = 5;
 
 final int PROCESS_WIDTH = 40, PROCESS_HEIGHT = 60, STARVATION = 100;
 final int HEAD_WIDTH = 100, HEAD_HEIGHT = 100;
 
+final Generator gen = new RandomGenerator(9);
+final Algorithm[] ALGS = new Algorithm[] { d_FCFS(new EDF()), d_FCFS(null)};
+
 final color[] PLOT_COLORS = new color[] { color (255, 0, 255), color (255, 0, 0), color (0, 255, 0), color (0, 0, 255), color (0, 255, 255) };
+
+final boolean visualize = false;
 
 //https://github.com/jagracar/grafica/blob/master/examples/MultiplePlots/MultiplePlots.pde
 
-Generator gen = new RandomGenerator(9);
 View view;
-boolean visualize = false;
 
 void setup() {
   size(1260, 500);
@@ -21,7 +27,12 @@ void setup() {
   rectMode(CENTER);
   background(255);
   if (!visualize) displayGraphs();
-  else view = new View(20, new Scene(d_FCFS(null)), new Scene(d_SSTF(null)), new Scene(d_Scan(null)), new Scene(d_CScan(null)));
+  else {
+    Scene[] scenes = new Scene[ALGS.length];
+    for (int i = 0; i < ALGS.length; scenes[i] = new Scene(ALGS[i++]));
+    for (int i = 0; i < scenes.length; i ++) print(scenes[i].processesLeft());
+    view = new View(20, scenes[0], scenes[1]);
+  }
   print("done");
 }
 
@@ -31,12 +42,39 @@ void draw() {
   view.drawView();
 }
 
+CScan d_CScan(RealTimeSheduler rt){
+  String n = rt == null ? "" : "_" + rt.getClass().getSimpleName();
+  return new CScan(START_POS, "C-Scan" + n, gen, PROCESSES_COUNT, DISK_SIZE, rt); 
+}
+
+Scan d_Scan(RealTimeSheduler rt){
+  String n = rt == null ? "" : "_" + rt.getClass().getSimpleName();
+  return new Scan(START_POS, "Scan" + n, gen, PROCESSES_COUNT, DISK_SIZE, rt); 
+}
+
+FCFS d_FCFS(RealTimeSheduler rt){
+  String n = rt == null ? "" : "_" + rt.getClass().getSimpleName();
+  return new FCFS(START_POS, "FCFS" + n, gen, PROCESSES_COUNT, rt); 
+}
+
+SSTF d_SSTF(RealTimeSheduler rt){
+  String n = rt == null ? "" : "_" + rt.getClass().getSimpleName();
+  return new SSTF(START_POS, "SSTF" + n, gen, PROCESSES_COUNT, rt); 
+}
+
+ArrayList<Process> cloneProcesses(ArrayList<Process> src){
+  ArrayList<Process> cloned = new ArrayList<Process>();
+  for(Process p : src){
+    cloned.add(p.clone());
+  }
+  return cloned;
+}
+
+
+// it's a bit mess here :((
+
 void displayGraphs(){
-  Algorithm[] algs = new Algorithm[] {d_FCFS(new EDF()), d_FCFS(null) };
-  
-  int step = 5, reps = 10;
-  
-  Simulation sim = new Simulation(step, PROCESSES_COUNT, reps, algs);
+  Simulation sim = new Simulation(STEP, PROCESSES_COUNT, REPS, ALGS);
   int numGraphs =  sim.results.keySet().size();
   int columns = (int) Math.ceil(Math.sqrt(numGraphs));
   int rows = (int) Math.ceil((double) numGraphs / columns);
@@ -57,30 +95,6 @@ void displayGraphs(){
         x, y, cellWidth - 100, cellHeight - 100);
     i++;
   }
-}
-
-CScan d_CScan(RealTimeSheduler rt){
-   return new CScan(START_POS, "C-Scan", gen, PROCESSES_COUNT, DISK_SIZE, rt); 
-}
-
-Scan d_Scan(RealTimeSheduler rt){
-   return new Scan(START_POS, "Scan", gen, PROCESSES_COUNT, DISK_SIZE, rt); 
-}
-
-FCFS d_FCFS(RealTimeSheduler rt){
-   return new FCFS(START_POS, "FCFS", gen, PROCESSES_COUNT, rt); 
-}
-
-SSTF d_SSTF(RealTimeSheduler rt){
-   return new SSTF(START_POS, "SSTF", gen, PROCESSES_COUNT, rt); 
-}
-
-ArrayList<Process> cloneProcesses(ArrayList<Process> src){
-  ArrayList<Process> cloned = new ArrayList<Process>();
-  for(Process p : src){
-    cloned.add(p.clone());
-  }
-  return cloned;
 }
 
 

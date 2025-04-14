@@ -10,6 +10,7 @@ public class View {
     rescaleScenes();
   }
   
+  
   public View(int margin){
     this.margin = margin;
     this.screens = 0;
