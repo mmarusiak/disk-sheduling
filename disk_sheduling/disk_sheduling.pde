@@ -31,7 +31,7 @@ void setup() {
     Scene[] scenes = new Scene[ALGS.length];
     for (int i = 0; i < ALGS.length; scenes[i] = new Scene(ALGS[i++]));
     for (int i = 0; i < scenes.length; i ++) print(scenes[i].processesLeft());
-    view = new View(20, scenes[0], scenes[1]);
+    view = new View(20, scenes);
   }
   print("done");
 }

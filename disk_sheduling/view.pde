@@ -1,12 +1,13 @@
 public class View {
   private int screens;
-  private ArrayList<Scene> scenes = new ArrayList<Scene>();
+  private Scene[] scenes;
   private int margin;
   
   public View(int margin, Scene... scenes){
     this.screens = scenes.length;
     this.margin = margin;
-    for (Scene scene : scenes) this.scenes.add(scene);
+    this.scenes = scenes;
+    print(scenes.length);
     rescaleScenes();
   }
   
@@ -31,8 +32,8 @@ public class View {
     int sceneWidth = (width - (cols + 1) * margin) / cols;
     int sceneHeight = (height - (rows + 1) * margin) / rows;
     
-    for(int i = 0; i < scenes.size(); i ++){
-      Scene scene = scenes.get(i);
+    for(int i = 0; i < scenes.length; i ++){
+      Scene scene = scenes[i];
       scene.setSceneWidth(sceneWidth);
       scene.setSceneHeight(sceneHeight);
       scene.setXOffset(margin * (i % cols + 1) + sceneWidth * (i % cols));
@@ -58,6 +59,6 @@ public class View {
      return false;
   }
   
-  public ArrayList<Scene> getScenes() { return scenes; }
+  public Scene[] getScenes() { return scenes; }
   
 }
