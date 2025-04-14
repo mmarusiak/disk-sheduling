@@ -2,16 +2,18 @@ import grafica.*;
 
 final int DISK_SIZE = 50;
 final int START_POS = 0;
-final int PROCESSES_COUNT = 300;
+final int PROCESSES_COUNT = 200;
 
-final int REPS = 20;
+final int REPS = 5;
 final int STEP = 5;
 
 final int PROCESS_WIDTH = 40, PROCESS_HEIGHT = 60, STARVATION = 50;
 final int HEAD_WIDTH = 100, HEAD_HEIGHT = 100;
 
 //final Generator gen = new RandomGenerator(6, 9);
-final Generator gen = new PartialGenerator(6, 10, DISK_SIZE, 2);
+//final Generator gen = new PartialGenerator(6, 10, DISK_SIZE, 2);
+final Generator gen = new LastPosGenerator(6, 9);
+
 final Algorithm[] ALGS = new Algorithm[] {d_FCFS(null), d_SSTF(null), d_Scan(null), d_CScan(null)};
 
 final color[] PLOT_COLORS = new color[] { color (255, 0, 255), color (255, 0, 0), color (0, 255, 0), color (0, 0, 255), color (0, 255, 255) };

@@ -9,6 +9,8 @@ public abstract class Algorithm{
   protected int processed;
   protected Generator generator;
   
+  protected int lastPos;
+  
   protected RealTimeSheduler rtSheduler = null;
   
   private double moves = 0, killed = 0, starved = 0;
@@ -17,6 +19,10 @@ public abstract class Algorithm{
     this.pos = startPos;
     this.name = name;
     this.generator = generator;
+    if (generator instanceof GeneratorOfAlg){
+      ((GeneratorOfAlg)this.generator).setAlg(this);
+    }
+    
     this.processesCount = count;
     this.processed = 0;
     this.processes = new ArrayList<Process>();
@@ -101,6 +107,7 @@ public abstract class Algorithm{
   }
   
   public void go(int delta){
+    this.lastPos = this.pos;
     this.moves += abs(delta);
     this.pos += delta; 
   }
