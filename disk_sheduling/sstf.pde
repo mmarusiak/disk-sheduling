@@ -3,7 +3,6 @@ public class SSTF extends Algorithm {
   
   public SSTF(int startX, String name, Generator generator, int processesCount, RealTimeSheduler rt){
     super(startX, name, generator, processesCount, rt);
-    sortProcesses();
     getCurrentProcess();
   }
   
@@ -28,6 +27,7 @@ public class SSTF extends Algorithm {
  }
  
  private boolean getCurrentProcess(){
+   this.sortProcesses();
    this.currentProcess = null;
    for (Process p : this.processes){
      if (p.arrivalTime > this.time) continue;
@@ -41,6 +41,12 @@ public class SSTF extends Algorithm {
      currentProcess = p;
    }
    return currentProcess != null;
+ }
+ 
+ @Override
+ public void addProcess(ArrayList<Process> target, Process process){
+    target.add(process);
+    getCurrentProcess();
  }
  
  @Override

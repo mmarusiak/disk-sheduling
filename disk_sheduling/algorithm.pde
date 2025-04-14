@@ -39,7 +39,7 @@ public abstract class Algorithm{
     int i = 0;
     while (i < pList.size()){
       Process p = pList.get(i);
-      if(p.getPos() != this.pos ||p.getArrivalTime() > this.time){
+      if(p.getPos() != this.pos || p.getArrivalTime() > this.time){
         i ++;
         continue;
       }
@@ -89,8 +89,8 @@ public abstract class Algorithm{
     time ++;
     waitProcesses();
     for (Process p : generator.getProcesses(time)) {
-      if(!p.isRealTime() || rtSheduler == null) this.processes.add(p.clone());
-      else this.rts.add(p.clone());
+      if(!p.isRealTime() || rtSheduler == null) this.addProcess(processes, p);
+      else this.addProcess(rts, p);
     }
     if(anyRealTime() && rtSheduler != null) go(rtSheduler.move(rts, processes, pos));
     else move();
@@ -107,6 +107,10 @@ public abstract class Algorithm{
   
   public String getName(){
     return name; 
+  }
+  
+  public void addProcess(ArrayList<Process> target, Process process){
+    target.add(process);
   }
   
   public void setName(String newName){
