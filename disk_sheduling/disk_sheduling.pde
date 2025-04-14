@@ -42,35 +42,44 @@ void draw() {
 }
 
 CScan d_CScan(RealTimeSheduler rt){
+  return d_CScan(rt, gen);
+}
+
+Scan d_Scan(RealTimeSheduler rt){
+  return d_Scan(rt, gen);
+}
+
+FCFS d_FCFS(RealTimeSheduler rt){
+  return d_FCFS(rt, gen);
+}
+
+SSTF d_SSTF(RealTimeSheduler rt){
+  return d_SSTF(rt, gen);
+}
+
+CScan d_CScan(RealTimeSheduler rt, Generator gen){
   String n = rt == null ? "" : "_" + rt.getClass().getSimpleName();
   return new CScan(START_POS, "C-Scan" + n, gen, PROCESSES_COUNT, DISK_SIZE, rt); 
 }
 
-Scan d_Scan(RealTimeSheduler rt){
+Scan d_Scan(RealTimeSheduler rt, Generator gen){
   String n = rt == null ? "" : "_" + rt.getClass().getSimpleName();
   return new Scan(START_POS, "Scan" + n, gen, PROCESSES_COUNT, DISK_SIZE, rt); 
 }
 
-FCFS d_FCFS(RealTimeSheduler rt){
+FCFS d_FCFS(RealTimeSheduler rt, Generator gen){
   String n = rt == null ? "" : "_" + rt.getClass().getSimpleName();
   return new FCFS(START_POS, "FCFS" + n, gen, PROCESSES_COUNT, rt); 
 }
 
-SSTF d_SSTF(RealTimeSheduler rt){
+SSTF d_SSTF(RealTimeSheduler rt, Generator gen){
   String n = rt == null ? "" : "_" + rt.getClass().getSimpleName();
   return new SSTF(START_POS, "SSTF" + n, gen, PROCESSES_COUNT, rt); 
 }
 
-ArrayList<Process> cloneProcesses(ArrayList<Process> src){
-  ArrayList<Process> cloned = new ArrayList<Process>();
-  for(Process p : src){
-    cloned.add(p.clone());
-  }
-  return cloned;
-}
-
 
 // it's a bit mess here :((
+/*---------------------------- [PLOTTING] ---------------------------------*/
 
 void displayGraphs(){
   Simulation sim = new Simulation(STEP, PROCESSES_COUNT, REPS, ALGS);
