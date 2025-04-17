@@ -87,7 +87,7 @@ We must notice that if we want to generate same set of processes for all algorit
 
 | Same generator for all algorithms | Each algorithm has its own generator |
 |-----------------------------------|--------------------------------------|
-| ![Generator 1](https://raw.githubusercontent.com/mmarusiak/mmarusiak.github.io/refs/heads/main/Posts/posts-materials/disk-sheduling/edgecase2.gif) | ![Generator 1](https://raw.githubusercontent.com/mmarusiak/mmarusiak.github.io/refs/heads/main/Posts/posts-materials/disk-sheduling/edgecase2.gif) |
+| ![Generator 1](https://raw.githubusercontent.com/mmarusiak/mmarusiak.github.io/refs/heads/main/Posts/posts-materials/disk-sheduling/edgecase2_1.gif) | ![Generator 1](https://raw.githubusercontent.com/mmarusiak/mmarusiak.github.io/refs/heads/main/Posts/posts-materials/disk-sheduling/edgecase2.gif) |
 
 
 We can see that generating processes in 2 scenarios will give us very comparable results. Only C-Scan algorithm will have significant change if we will generate processes for algorithms separately. SSTF and FCFS will have similar results in both scenarios, because they will catch processes or will be stuck between two positions where processes are.
